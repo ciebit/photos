@@ -1,0 +1,38 @@
+{
+    "name": "ciebit/photos",
+    "description": "Model de fotos e álbuns",
+    "keywords": ["fotos", "álbuns", "photo", "album"],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/ciebit/photos/issues",
+        "source": "https://github.com/ciebit/photos"
+    },
+    "authors": [
+        {
+            "name": "Johnny Saymon",
+            "email": "saymon@ciebit.com",
+            "homepage": "http://saymon.ciebit.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ciebit\\Photos\\": "sources/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ciebit\\PhotosTests\\": "tests/classes/"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "myclabs/php-enum": "^1.6.1",
+        "ciebit/files": "^0.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5",
+        "phpunit/dbunit": "^3.0"
+    }
+}
