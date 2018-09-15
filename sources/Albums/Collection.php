@@ -16,7 +16,7 @@ class Collection implements Countable, IteratorAggregate
         $this->albums = new ArrayObject;
     }
 
-    public function add(Photo ...$albums): self
+    public function add(Album ...$albums): self
     {
         foreach ($albums as $album) {
             $this->albums->append($album);
