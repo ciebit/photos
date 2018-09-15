@@ -49,4 +49,11 @@ class SqlTest extends Connection
         $photo = $database->get();
         $this->assertEquals(Status::DRAFT(), $photo->getStatus());
     }
+
+    public function testGetAll(): void
+    {
+        $database = $this->getDatabase();
+        $collection = $database->getAll();
+        $this->assertInstanceOf(Collection::class, $collection);
+    }
 }

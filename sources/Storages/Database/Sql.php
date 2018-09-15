@@ -1,6 +1,7 @@
 <?php
 namespace Ciebit\Photos\Storages\Database;
 
+use Ciebit\Photos\Collection;
 use Ciebit\Photos\Photo;
 use Ciebit\Photos\Status;
 use Ciebit\Photos\Helpers\Sql as SqlHelper;
@@ -10,6 +11,7 @@ use Ciebit\Files\Storages\Storage as FileStorage;
 use Exception;
 use PDO;
 
+use function array_column;
 use function array_map;
 use function count;
 use function implode;
@@ -80,7 +82,7 @@ class Sql extends SqlHelper implements Database
         $columns = implode(',', $columns);
 
         $statement = $this->pdo->prepare(
-            $sql  = "SELECT SQL_CALC_FOUND_ROWS
+            "SELECT SQL_CALC_FOUND_ROWS
             {$columns}
             FROM {$this->tableGet} as `photos`
             WHERE {$this->generateSqlFilters()}
@@ -107,6 +109,56 @@ class Sql extends SqlHelper implements Database
         }
 
         return $this->build($photoData);
+    }
+
+    public function getAll(): Collection
+    {
+        $columns = array_map(
+            function($column) {
+                return "`photos`.`{$column}`";
+            },
+            $this->getColumns()
+        );
+        $columns = implode(',', $columns);
+
+        $statement = $this->pdo->prepare(
+            "SELECT SQL_CALC_FOUND_ROWS
+            {$columns}
+            FROM {$this->tableGet} as `photos`
+            WHERE {$this->generateSqlFilters()}
+            {$this->generateSqlOrder()}
+            {$this->generateSqlLimit()}"
+        );
+
+        $this->bind($statement);
+        if ($statement->execute() === false) {
+            throw new Exception('ciebit.photos.storages.database.sql.get_all_error', 4);
+        }
+
+        $collection = new Collection;
+        $photosData = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if ($photosData == false) {
+            return $collection;
+        }
+
+        $fileStorage = clone $this->fileStorage;
+        $imagesId = array_column($photosData, 'file_id');
+        $imagesId = array_map('intval', $imagesId);
+        $images = $fileStorage->addFilterByIds('=', ...$imagesId)->getAll();
+
+        foreach ($photosData as $photoData) {
+            $photoData['image'] = $images->getById($photoData['file_id']);
+
+            if (! $photoData['image'] instanceof Image) {
+                throw new Exception('ciebit.photos.storages.database.sql.image_not_found', 3);
+            }
+
+            $collection->add(
+                $this->build($photoData)
+            );
+        }
+
+        return $collection;
     }
 
     private function getColumns(): array
