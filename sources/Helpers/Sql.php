@@ -1,6 +1,8 @@
 <?php
 namespace Ciebit\Photos\Helpers;
 
+use PDOStatement;
+
 use function array_map;
 use function count;
 use function implode;
@@ -41,6 +43,12 @@ abstract class Sql
         return $this;
     }
 
+    protected function addSqlOrderBy(string $column, string $order): self
+    {
+        $this->sqlOrderBy[] = [$column, $order];
+        return $this;
+    }
+
     protected function addSqlParam(string $column, string $operator, array $values): self
     {
         $keys = [];
@@ -57,6 +65,17 @@ abstract class Sql
         }
 
         $this->addSqlFilter("{$column} {$operator} {$keysStr}");
+    }
+
+    protected function bind(PDOStatement $statment): self
+    {
+        if (! is_array($this->sqlBindList)) {
+            return $this;
+        }
+        foreach ($this->sqlBindList as $bind) {
+            $statment->bindValue(":{$bind['key']}", $bind['value'], $bind['type']);
+        }
+        return $this;
     }
 
     protected function generateSqlFilters(): string
@@ -97,13 +116,13 @@ abstract class Sql
         return $sql;
     }
 
-    public function setLimit(int $limit): self
+    protected function setSqlLimit(int $limit): self
     {
         $this->limit = $limit;
         return $this;
     }
 
-    public function setOffset(int $offset): self
+    protected function setSqlOffset(int $offset): self
     {
         $this->offset = $offset;
         return $this;

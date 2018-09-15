@@ -9,7 +9,7 @@ CREATE TABLE `cb_photos_albumns` (
     PRIMARY KEY  (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT='version:1.0';
 
-CREATE TABLE `cb_photos_association` ( 
+CREATE TABLE `cb_photos_associations` ( 
     `id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
     `file_id` INT(10) UNSIGNED NOT NULL,
     `album_id` INT(5) UNSIGNED NOT NULL,

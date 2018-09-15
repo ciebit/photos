@@ -4,6 +4,7 @@ namespace Ciebit\Photos\Storages\Database;
 use Ciebit\Photos\Photo;
 use Ciebit\Photos\Status;
 use Ciebit\Photos\Helpers\Sql as SqlHelper;
+use Ciebit\Photos\Storages\Storage;
 use Ciebit\Files\Images\Image;
 use Ciebit\Files\Storages\Storage as FileStorage;
 use Exception;
@@ -25,7 +26,7 @@ class Sql extends SqlHelper implements Database
 
         $this->fileStorage = $fileStorage;
         $this->pdo = $pdo;
-        $this->tableGet = 'cb_photos_complete';
+        $this->tableGet = 'cb_photos_associations';
     }
 
     public function addFilterByAlbumId(string $operator, string ...$ids): Storage
@@ -46,17 +47,23 @@ class Sql extends SqlHelper implements Database
         return $this;
     }
 
+    public function addOrderBy(string $column, string $order = "ASC"): Storage
+    {
+        $this->addSqlOrderBy($column, $order);
+        return $this;
+    }
+
     private function build(array $data): Photo
     {
         $photo = new Photo(
             $data['image'],
-            new Status($data['status'])
+            new Status((int) $data['status'])
         );
 
         $photo
         ->setId($data['id'])
-        ->setPosition($data['position'])
-        ->setViews($data['views'])
+        ->setPosition((int) $data['position'])
+        ->setViews((int) $data['views'])
         ;
 
         return $photo;
@@ -66,14 +73,14 @@ class Sql extends SqlHelper implements Database
     {
         $columns = array_map(
             function($column) {
-                return "`photo`.`{$column}`";
+                return "`photos`.`{$column}`";
             },
             $this->getColumns()
         );
         $columns = implode(',', $columns);
 
         $statement = $this->pdo->prepare(
-            "SELECT SQL_CALC_FOUND_ROWS
+            $sql  = "SELECT SQL_CALC_FOUND_ROWS
             {$columns}
             FROM {$this->tableGet} as `photos`
             WHERE {$this->generateSqlFilters()}
@@ -116,7 +123,7 @@ class Sql extends SqlHelper implements Database
 
     public function setLimit(int $limit): Storage
     {
-        parent::setLimit($limit);
+        parent::setSqlLimit($limit);
         return $this;
     }
 
@@ -127,7 +134,7 @@ class Sql extends SqlHelper implements Database
 
     public function setOffset(int $limit): Storage
     {
-        parent::setOffset($limit);
+        parent::setSqlOffset($limit);
         return $this;
     }
 
