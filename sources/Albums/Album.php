@@ -7,7 +7,7 @@ use DateTime;
 
 class Album
 {
-    private $dateHour; #: DateTime
+    private $dateTime; #: DateTime
     private $description; #: string
     private $id; #: string
     private $language; #: string
@@ -18,7 +18,7 @@ class Album
 
     public function __construct(string $title, PhotosCollection $photos, Status $status)
     {
-        $this->dateHour = new DateTime;
+        $this->dateTime = new DateTime;
         $this->description = '';
         $this->id = '';
         $this->language = 'pt-BR';
@@ -31,9 +31,9 @@ class Album
     /*
      * GETs
     */
-    public function getDateHour(): DateTime
+    public function getDateTime(): DateTime
     {
-        return $this->dateHour;
+        return $this->dateTime;
     }
 
     public function getDescription(): string
@@ -75,9 +75,9 @@ class Album
     /*
      * SETs
     */
-    public function setDateHour(DateTime $value): self
+    public function setDateTime(DateTime $value): self
     {
-        $this->dateHour = $value;
+        $this->dateTime = $value;
         return $this;
     }
 
