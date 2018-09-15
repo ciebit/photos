@@ -63,6 +63,7 @@ class Sql extends SqlHelper implements Database
         );
 
         $photo
+        ->setAlbumId($data['album_id'])
         ->setId($data['id'])
         ->setPosition((int) $data['position'])
         ->setViews((int) $data['views'])

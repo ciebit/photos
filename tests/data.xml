@@ -79,6 +79,43 @@
         </row>
     </table>
 
+    <table name="cb_photos_albums">
+        <column>id</column>
+        <column>title</column>
+        <column>description</column>
+        <column>language</column>
+        <column>uri</column>
+        <column>date_time</column>
+        <column>status</column>
+        <row>
+            <value>1</value>
+            <value>Title Example 01</value>
+            <value>Description Example 01</value>
+            <value>pt-BR</value>
+            <value>uri-example-01</value>
+            <value>2018-09-15 17:56:00</value>
+            <value>3</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>Title Example 02</value>
+            <value>Description Example 02</value>
+            <value>pt-BR</value>
+            <value>uri-example-02</value>
+            <value>2018-09-15 17:57:00</value>
+            <value>2</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>Title Example 03</value>
+            <value>Description Example 03</value>
+            <value>pt-BR</value>
+            <value>uri-example-03</value>
+            <value>2018-09-15 18:32:00</value>
+            <value>1</value>
+        </row>
+    </table>
+
     <table name="cb_photos_associations">
         <column>id</column>
         <column>file_id</column>
