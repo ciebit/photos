@@ -62,7 +62,7 @@ abstract class Sql
 
         $keysStr = implode(',', $keys);
         if (count($values) > 1) {
-            $keysStr = "({$keyStr})";
+            $keysStr = "({$keysStr})";
         }
 
         $this->addSqlFilter("{$column} {$operator} {$keysStr}");

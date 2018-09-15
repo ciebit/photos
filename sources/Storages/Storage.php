@@ -17,7 +17,7 @@ interface Storage
 
     public function get(): ?Photo;
 
-    // public function getAll(): Collection;
+    public function getAll(): Collection;
 
     public function setLimit(int $limit): self;
 
