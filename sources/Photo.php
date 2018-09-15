@@ -5,6 +5,7 @@ use Ciebit\Files\Images\Image;
 
 class Photo
 {
+    private $albumId; #: string
     private $id; #: string
     private $image; #: Image
     private $position; #: int
@@ -13,6 +14,7 @@ class Photo
 
     public function __construct(Image $image, Status $status)
     {
+        $this->albumId = '';
         $this->id = '';
         $this->image = $image;
         $this->position = 0;
@@ -23,6 +25,11 @@ class Photo
     /*
      * GETs
     */
+    public function getAlbumId(): string
+    {
+        return $this->albumId;
+    }
+
     public function getId(): string
     {
         return $this->id;
@@ -51,6 +58,12 @@ class Photo
     /*
      * SETs
     */
+    public function setAlbumId(string $id): self
+    {
+        $this->albumId = $id;
+        return $this;
+    }
+
     public function setId(string $id): self
     {
         $this->id = $id;

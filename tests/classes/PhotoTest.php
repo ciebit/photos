@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 class PhotoTest extends TestCase
 {
-    private const ID = 1;
+    private const ALBUM_ID = 1;
+    private const ID = 5;
     private const POSITION = 4;
     private const STATUS = 3;
     private const VIEWS = 2;
@@ -21,12 +22,14 @@ class PhotoTest extends TestCase
             new Status(self::STATUS)
         );
         $photo
+        ->setAlbumId(self::ALBUM_ID)
         ->setId(self::ID)
         ->setPosition(self::POSITION)
         ->setViews(self::VIEWS)
         ;
 
         $this->assertInstanceOf(Image::class, $photo->getImage());
+        $this->assertEquals(self::ALBUM_ID, $photo->getAlbumId());
         $this->assertEquals(self::ID, $photo->getId());
         $this->assertEquals(self::POSITION, $photo->getPosition());
         $this->assertEquals(self::STATUS, $photo->getStatus()->getValue());
