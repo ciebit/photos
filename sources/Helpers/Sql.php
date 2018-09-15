@@ -1,6 +1,7 @@
 <?php
 namespace Ciebit\Photos\Helpers;
 
+use PDO;
 use PDOStatement;
 
 use function array_map;
@@ -65,6 +66,7 @@ abstract class Sql
         }
 
         $this->addSqlFilter("{$column} {$operator} {$keysStr}");
+        return $this;
     }
 
     protected function bind(PDOStatement $statment): self

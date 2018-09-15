@@ -59,9 +59,9 @@
             <value>jpg</value>
             <value>40</value>
             <value>5058</value>
-            <value>application/json</value>
+            <value>image/jpeg</value>
             <value>2017-01-19</value>
-            <value>{}</value>
+            <value>{"width": 130, "height": 50}</value>
             <value>4</value>
         </row>
         <row>
@@ -72,9 +72,9 @@
             <value>jpg</value>
             <value>40</value>
             <value>5058</value>
-            <value>application/json</value>
+            <value>image/jpeg</value>
             <value>2018-08-14</value>
-            <value>{}</value>
+            <value>{"width": 130, "height": 50}</value>
             <value>4</value>
         </row>
     </table>
@@ -109,6 +109,22 @@
             <value>3</value>
             <value>0</value>
             <value>3</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>4</value>
+            <value>2</value>
+            <value>1</value>
+            <value>5</value>
+            <value>3</value>
+        </row>
+        <row>
+            <value>5</value>
+            <value>5</value>
+            <value>2</value>
+            <value>2</value>
+            <value>4</value>
+            <value>1</value>
         </row>
     </table>
 </dataset>
