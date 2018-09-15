@@ -33,6 +33,22 @@ class CollectionTest extends TestCase
         $this->assertCount(2, $collection);
     }
 
+    public function testGetByAlbumId(): void
+    {
+        $collection =  new Collection;
+        $photo01 = new Photo(
+            ImageBuilder::build(),
+            Status::ACTIVE()
+        );
+        $photo02 = clone $photo01;
+
+        $photo01->setAlbumId(1);
+        $photo02->setAlbumId(2);
+
+        $collection->add($photo01, $photo02);
+        $this->assertEquals(2, $collection->getByAlbumId(2)->getArrayObject()->offsetGet(0)->getAlbumId());
+    }
+
     public function testInvalidValue(): void
     {
         $this->expectException(TypeError::class);
