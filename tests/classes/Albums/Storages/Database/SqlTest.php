@@ -1,6 +1,7 @@
 <?php
 namespace Ciebit\PhotosTests\Albums\Storages\Database;
 
+use Ciebit\Files\Images\Image;
 use Ciebit\Files\Storages\Database\Sql as FileSql;
 use Ciebit\Photos\Albums\Collection;
 use Ciebit\Photos\Albums\Album;
@@ -16,7 +17,7 @@ class SqlTest extends Connection
         $pdo = $this->getPdo();
         $fileStorage = new FileSql($pdo);
         $albumStorage = new PhotoStorage($pdo, $fileStorage);
-        return new Sql($pdo, $albumStorage);
+        return new Sql($pdo, $albumStorage, $fileStorage);
     }
 
     public function testGet(): void
@@ -33,6 +34,7 @@ class SqlTest extends Connection
         $database->addFilterById('=', $id + 0);
         $album = $database->get();
         $this->assertEquals($id, $album->getId());
+        $this->assertInstanceOf(Image::class, $album->getCover());
     }
 
     public function testGetFilterByStatus(): void
@@ -71,6 +73,7 @@ class SqlTest extends Connection
             $albums->offsetGet(1)->getId()
         ];
         $this->assertArraySubset([2,3], $ids);
+        $this->assertInstanceOf(Image::class, $albums->offsetGet(0)->getCover());
     }
 
     public function testGetAllFilterByStatus(): void

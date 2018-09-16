@@ -1,6 +1,7 @@
 <?php
 namespace Ciebit\PhotosTests;
 
+use Ciebit\Files\Images\Image;
 use Ciebit\Photos\Albums\Album;
 use Ciebit\Photos\Albums\Status;
 use Ciebit\Photos\Collection as PhotoCollection;
@@ -27,6 +28,7 @@ class AlbumTest extends TestCase
             new Status(self::STATUS)
         );
         $album
+        ->setCover(ImageBuilder::build())
         ->setDateTime(new DateTime(self::DATE_TIME))
         ->setDescription(self::DESCRIPTION)
         ->setId(self::ID)
@@ -34,8 +36,8 @@ class AlbumTest extends TestCase
         ->setUri(self::URI)
         ;
 
-
         $this->assertInstanceOf(PhotoCollection::class, $album->getPhotos());
+        $this->assertInstanceOf(Image::class, $album->getCover());
         $this->assertEquals(new DateTime(self::DATE_TIME), $album->getDateTime());
         $this->assertEquals(self::DESCRIPTION, $album->getDescription());
         $this->assertEquals(self::ID, $album->getId());

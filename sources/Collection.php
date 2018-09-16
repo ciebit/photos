@@ -44,6 +44,17 @@ class Collection implements Countable, IteratorAggregate
         return $collection;
     }
 
+    public function getById(string $id): ?Photo
+    {
+        foreach ($this->getIterator() as $photo) {
+            if ($photo->getId() ==  $id) {
+                return $photo;
+            }
+        }
+
+        return null;
+    }
+
     public function getIterator(): ArrayIterator
     {
         return $this->photos->getIterator();

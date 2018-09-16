@@ -81,6 +81,7 @@
 
     <table name="cb_photos_albums">
         <column>id</column>
+        <column>cover_id</column>
         <column>title</column>
         <column>description</column>
         <column>language</column>
@@ -88,6 +89,7 @@
         <column>date_time</column>
         <column>status</column>
         <row>
+            <value>1</value>
             <value>1</value>
             <value>Title Example 01</value>
             <value>Description Example 01</value>
@@ -98,6 +100,7 @@
         </row>
         <row>
             <value>2</value>
+            <value>2</value>
             <value>Title Example 02</value>
             <value>Description Example 02</value>
             <value>pt-BR</value>
@@ -106,6 +109,7 @@
             <value>2</value>
         </row>
         <row>
+            <value>3</value>
             <value>3</value>
             <value>Title Example 03</value>
             <value>Description Example 03</value>
