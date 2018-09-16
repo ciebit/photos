@@ -45,6 +45,15 @@ class SqlTest extends Connection
         $this->assertEquals(Status::DRAFT(), $album->getStatus());
     }
 
+    public function testGetFilterByUri(): void
+    {
+        $uri = 'uri-example-02';
+        $database = $this->getDatabase();
+        $database->addFilterByUri('=', $uri.'');
+        $album = $database->get();
+        $this->assertEquals($uri, $album->getUri());
+    }
+
     public function testGetOrder(): void
     {
         $database = $this->getDatabase();
@@ -83,6 +92,16 @@ class SqlTest extends Connection
         $collection = $database->getAll();
         $this->assertCount(1, $collection);
         $this->assertEquals(Status::DRAFT(), $collection->getArrayObject()->offsetGet(0)->getStatus());
+    }
+
+    public function testGetAllFilterByUri(): void
+    {
+        $uri = 'uri-example-03';
+        $database = $this->getDatabase();
+        $database->addFilterByUri('=', $uri.'');
+        $albums = $database->getAll();
+        $this->assertCount(1, $albums);
+        $this->assertEquals($uri, $albums->getArrayObject()->offsetGet(0)->getUri());
     }
 
     public function testGetAllLimit(): void

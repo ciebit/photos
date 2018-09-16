@@ -48,6 +48,12 @@ class Sql extends SqlHelper implements Database
         return $this;
     }
 
+    public function addFilterByUri(string $operator, string ...$uriList): Storage
+    {
+        $this->addSqlParam('`albums`.`uri`', $operator, $uriList);
+        return $this;
+    }
+
     public function addOrderBy(string $column, string $order = "ASC"): Storage
     {
         $this->addSqlOrderBy($column, $order);
