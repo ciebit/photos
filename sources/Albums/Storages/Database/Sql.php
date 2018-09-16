@@ -1,6 +1,8 @@
 <?php
 namespace Ciebit\Photos\Albums\Storages\Database;
 
+use Ciebit\Files\Images\Image;
+use Ciebit\Files\Storages\Storage as FileStorage;
 use Ciebit\Photos\Albums\Album;
 use Ciebit\Photos\Albums\Collection;
 use Ciebit\Photos\Albums\Status;
@@ -19,14 +21,16 @@ use function implode;
 
 class Sql extends SqlHelper implements Database
 {
+    private $fileStorage; #: FileStorage
     private $photoStorage; #: PhotoStorage
     private $pdo; #PDO
     private $tableGet; #string
 
-    public function __construct(PDO $pdo, PhotoStorage $photoStorage)
+    public function __construct(PDO $pdo, PhotoStorage $photoStorage, FileStorage $fileStorage)
     {
         parent::__construct();
 
+        $this->fileStorage = $fileStorage;
         $this->photoStorage = $photoStorage;
         $this->pdo = $pdo;
         $this->tableGet = 'cb_photos_albums';
@@ -57,6 +61,10 @@ class Sql extends SqlHelper implements Database
             $data['photos'],
             new Status((int) $data['status'])
         );
+
+        if (isset($data['cover']) && $data['cover'] instanceof Image) {
+            $album->setCover($data['cover']);
+        }
 
         $album
         ->setDateTime(new DateTime($data['date_time']))
@@ -101,6 +109,11 @@ class Sql extends SqlHelper implements Database
         $photoStorage = clone $this->photoStorage;
         $albumData['photos'] = $photoStorage->addFilterByAlbumId('=', $albumData['id'])->getAll();
 
+        if ($albumData['cover_id'] > 0) {
+            $fileStorage = clone $this->fileStorage;
+            $albumData['cover'] = $fileStorage->addFilterById($albumData['cover_id'])->get();
+        }
+
         if (! $albumData['photos'] instanceof PhotosCollection) {
             throw new Exception('ciebit.photos.albums.storages.database.sql.image_not_found', 3);
         }
@@ -138,12 +151,19 @@ class Sql extends SqlHelper implements Database
             return $collection;
         }
 
-        $photoStorage = clone $this->photoStorage;
         $albumsId = array_column($albumsData, 'id');
+        $photoStorage = clone $this->photoStorage;
         $photos = $photoStorage->addFilterByAlbumId('IN', ...$albumsId)->getAll();
+
+        $coversId = array_column($albumsData, 'cover_id');
+        $coversId = array_filter($coversId);
+        $images = (clone $this->fileStorage)->addFilterByIds('=', ...$coversId)->getAll();
 
         foreach ($albumsData as $albumData) {
             $albumData['photos'] = $photos->getByAlbumId($albumData['id']);
+            if ($albumData['cover_id'] > 0) {
+                $albumData['cover'] = $images->getById($albumData['cover_id']);
+            }
             $collection->add(
                 $this->build($albumData)
             );
@@ -155,6 +175,7 @@ class Sql extends SqlHelper implements Database
     private function getColumns(): array
     {
         return [
+            'cover_id',
             'date_time',
             'description',
             'id',

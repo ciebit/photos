@@ -1,12 +1,14 @@
 <?php
 namespace Ciebit\Photos\Albums;
 
+use Ciebit\Files\Images\Image;
 use Ciebit\Photos\Collection as PhotosCollection;
 use Ciebit\Photos\Albums\Status;
 use DateTime;
 
 class Album
 {
+    private $cover; #: Image
     private $dateTime; #: DateTime
     private $description; #: string
     private $id; #: string
@@ -31,6 +33,11 @@ class Album
     /*
      * GETs
     */
+    public function getCover(): ?Image
+    {
+        return $this->cover;
+    }
+
     public function getDateTime(): DateTime
     {
         return $this->dateTime;
@@ -75,6 +82,12 @@ class Album
     /*
      * SETs
     */
+    public function setCover(Image $image): self
+    {
+        $this->cover = $image;
+        return $this;
+    }
+
     public function setDateTime(DateTime $value): self
     {
         $this->dateTime = $value;
