@@ -11,6 +11,8 @@ interface Storage
 
     public function addFilterByStatus(string $operator, Status ...$statusList): self;
 
+    public function addFilterByUri(string $operator, string ...$uriList): self;
+
     public function addOrderBy(string $column, string $order): self;
 
     public function get(): ?Album;
