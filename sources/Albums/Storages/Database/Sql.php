@@ -74,11 +74,12 @@ class Sql extends SqlHelper implements Database
 
         $album
         ->setDateTime(new DateTime($data['date_time']))
-        ->setDescription($data['description'])
         ->setId($data['id'])
-        ->setLanguage($data['language'])
         ->setUri($data['uri'])
         ;
+
+        $data['description'] != null && $album->setDescription($data['description']);
+        $data['language'] != null && $album->setLanguage($data['language']);
 
         return $album;
     }

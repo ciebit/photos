@@ -59,7 +59,7 @@ class SqlTest extends Connection
         $database = $this->getDatabase();
         $database->addOrderBy('id', 'DESC');
         $album = $database->get();
-        $this->assertEquals(3, $album->getId());
+        $this->assertEquals(4, $album->getId());
     }
 
     public function testGetAll(): void
@@ -117,6 +117,6 @@ class SqlTest extends Connection
         $database = $this->getDatabase();
         $database->addOrderBy('id', 'DESC');
         $collection = $database->getAll();
-        $this->assertEquals(3, $collection->getArrayObject()->offsetGet(0)->getId());
+        $this->assertEquals(4, $collection->getArrayObject()->offsetGet(0)->getId());
     }
 }

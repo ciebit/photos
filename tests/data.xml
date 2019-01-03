@@ -118,6 +118,16 @@
             <value>2018-09-15 18:32:00</value>
             <value>1</value>
         </row>
+        <row>
+            <value>4</value>
+            <value>4</value>
+            <value>Title Example 04</value>
+            <null/>
+            <null/>
+            <value>uri-example-04</value>
+            <value>2018-10-16 18:32:00</value>
+            <value>3</value>
+        </row>
     </table>
 
     <table name="cb_photos_associations">
