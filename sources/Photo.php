@@ -2,15 +2,28 @@
 namespace Ciebit\Photos;
 
 use Ciebit\Files\Images\Image;
+use Ciebit\Photos\Status;
 
 class Photo
 {
-    private $albumId; #: string
-    private $id; #: string
-    private $image; #: Image
-    private $position; #: int
-    private $status; #: Status
-    private $views ; #: int
+    /** @var string */
+    private $albumId;
+
+    /** @var string */
+    private $id;
+
+    /** @var Image */
+    private $image;
+
+    /** @var int */
+    private $position;
+
+    /** @var Status */
+    private $status;
+
+    /** @var int */
+    private $views;
+
 
     public function __construct(Image $image, Status $status)
     {

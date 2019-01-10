@@ -16,14 +16,13 @@ class SqlTest extends Connection
     {
         $pdo = $this->getPdo();
         $fileStorage = new FileSql($pdo);
-        $albumStorage = new PhotoStorage($pdo, $fileStorage);
-        return new Sql($pdo, $albumStorage, $fileStorage);
+        return new Sql($pdo, $fileStorage);
     }
 
     public function testGet(): void
     {
         $database = $this->getDatabase();
-        $album = $database->get();
+        $album = $database->findOne();
         $this->assertInstanceOf(Album::class, $album);
     }
 
@@ -32,7 +31,7 @@ class SqlTest extends Connection
         $id = 2;
         $database = $this->getDatabase();
         $database->addFilterById('=', $id + 0);
-        $album = $database->get();
+        $album = $database->findOne();
         $this->assertEquals($id, $album->getId());
         $this->assertInstanceOf(Image::class, $album->getCover());
     }
@@ -41,7 +40,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterByStatus('=', Status::DRAFT());
-        $album = $database->get();
+        $album = $database->findOne();
         $this->assertEquals(Status::DRAFT(), $album->getStatus());
     }
 
@@ -50,7 +49,7 @@ class SqlTest extends Connection
         $uri = 'uri-example-02';
         $database = $this->getDatabase();
         $database->addFilterByUri('=', $uri.'');
-        $album = $database->get();
+        $album = $database->findOne();
         $this->assertEquals($uri, $album->getUri());
     }
 
@@ -58,14 +57,14 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addOrderBy('id', 'DESC');
-        $album = $database->get();
+        $album = $database->findOne();
         $this->assertEquals(4, $album->getId());
     }
 
     public function testGetAll(): void
     {
         $database = $this->getDatabase();
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertInstanceOf(Collection::class, $collection);
     }
 
@@ -73,7 +72,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterById('IN', 2, 3);
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(2, $collection);
 
         $albums = $collection->getArrayObject();
@@ -89,7 +88,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterByStatus('=', Status::DRAFT());
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(1, $collection);
         $this->assertEquals(Status::DRAFT(), $collection->getArrayObject()->offsetGet(0)->getStatus());
     }
@@ -99,7 +98,7 @@ class SqlTest extends Connection
         $uri = 'uri-example-03';
         $database = $this->getDatabase();
         $database->addFilterByUri('=', $uri.'');
-        $albums = $database->getAll();
+        $albums = $database->findAll();
         $this->assertCount(1, $albums);
         $this->assertEquals($uri, $albums->getArrayObject()->offsetGet(0)->getUri());
     }
@@ -108,7 +107,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->setLimit(2);
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(2, $collection);
     }
 
@@ -116,7 +115,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addOrderBy('id', 'DESC');
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertEquals(4, $collection->getArrayObject()->offsetGet(0)->getId());
     }
 }

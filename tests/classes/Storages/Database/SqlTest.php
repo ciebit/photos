@@ -20,7 +20,7 @@ class SqlTest extends Connection
     public function testGet(): void
     {
         $database = $this->getDatabase();
-        $photo = $database->get();
+        $photo = $database->findOne();
         $this->assertInstanceOf(Photo::class, $photo);
     }
 
@@ -29,7 +29,7 @@ class SqlTest extends Connection
         $id = 2;
         $database = $this->getDatabase();
         $database->addFilterByAlbumId('=', $id + 0);
-        $photo = $database->get();
+        $photo = $database->findOne();
         $this->assertEquals(4, $photo->getId());
     }
 
@@ -38,7 +38,7 @@ class SqlTest extends Connection
         $id = 3;
         $database = $this->getDatabase();
         $database->addFilterById('=', $id + 0);
-        $photo = $database->get();
+        $photo = $database->findOne();
         $this->assertEquals($id, $photo->getId());
     }
 
@@ -46,22 +46,22 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterByStatus('=', Status::DRAFT());
-        $photo = $database->get();
+        $photo = $database->findOne();
         $this->assertEquals(Status::DRAFT(), $photo->getStatus());
     }
 
     public function testGetOrder(): void
     {
         $database = $this->getDatabase();
-        $database->addOrderBy('views', 'DESC');
-        $photo = $database->get();
+        $database->addOrderBy(Sql::FIELD_VIEWS, 'DESC');
+        $photo = $database->findOne();
         $this->assertEquals(5, $photo->getViews());
     }
 
     public function testGetAll(): void
     {
         $database = $this->getDatabase();
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertInstanceOf(Collection::class, $collection);
     }
 
@@ -69,7 +69,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterByAlbumId('IN', 1, 2);
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertCount(5, $collection);
     }
@@ -78,7 +78,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterById('IN', 2, 3);
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(2, $collection);
 
         $photos = $collection->getArrayObject();
@@ -93,7 +93,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addFilterByStatus('=', Status::DRAFT());
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(1, $collection);
         $this->assertEquals(Status::DRAFT(), $collection->getArrayObject()->offsetGet(0)->getStatus());
     }
@@ -102,7 +102,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->setLimit(2);
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertCount(2, $collection);
     }
 
@@ -110,7 +110,7 @@ class SqlTest extends Connection
     {
         $database = $this->getDatabase();
         $database->addOrderBy('views', 'DESC');
-        $collection = $database->getAll();
+        $collection = $database->findAll();
         $this->assertEquals(5, $collection->getArrayObject()->offsetGet(0)->getViews());
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Ciebit\PhotosTests\Albums;
 
-use Ciebit\Photos\Collection as PhotoCollection;
 use Ciebit\Photos\Albums\Collection;
 use Ciebit\Photos\Albums\Album;
 use Ciebit\Photos\Albums\Status;
@@ -19,12 +18,10 @@ class CollectionTest extends TestCase
         $collection->add(
             new Album(
                 'Title Example 01',
-                new PhotoCollection,
                 Status::ACTIVE()
             ),
             new Album(
                 'Title Example 02',
-                new PhotoCollection,
                 Status::ACTIVE()
             )
         );

@@ -1,36 +1,49 @@
 <?php
 namespace Ciebit\Photos\Helpers;
 
-use PDO;
 use PDOStatement;
 
-use function array_map;
 use function count;
 use function implode;
+use function is_array;
+use function str_replace;
+use function strlen;
 
-abstract class Sql
+class Sql
 {
-    static private $counterKey = 0;
+    /** @var array */
+    private $bindList;
 
-    private $limit; #: int
-    private $offset; #: int
-    private $sqlBindList; #: array
-    private $sqlFilters; #: array
-    private $sqlJoin; #: array
-    private $sqlOrderBy; #: array
+    /** @var int|null */
+    private $limit;
+
+    /** @var int|null */
+    private $offset;
+
+    /** @var array */
+    private $orderBy;
+
+    /** @var array */
+    private $sqlFilters;
+
+    /** @var array */
+    private $sqlJoin;
+
+    /** @var int */
+    private $valueKey;
 
     public function __construct()
     {
-        $this->sqlBindList = [];
+        $this->bindList = [];
+        $this->orderBy = [];
         $this->sqlFilters = [];
-        $this->sqlLimit = [];
         $this->sqlJoin = [];
-        $this->sqlOrderBy = [];
+        $this->valueKey = 0;
     }
 
-    protected function addSqlBind(string $key, int $type, $value): self
+    public function addBind(string $key, int $type, $value): self
     {
-        $this->sqlBindList[] = [
+        $this->bindList[] = [
             'key' => $key,
             'value' => $value,
             'type' => $type
@@ -38,46 +51,58 @@ abstract class Sql
         return $this;
     }
 
-    protected function addSqlFilter(string $sql): self
+    public function addFilterBy(string $field, int $type, string $operator, ...$values): self
+    {
+        if (count($values) > 1) {
+            $operator = str_replace(['=', '!='], ['IN', 'NOT IN'], $operator);
+            $keys = [];
+            foreach ($values as $value) {
+                $key = $this->generateValueKey();
+                $keys[] = $key;
+                $this->addBind($key, $type, $value);
+            }
+            $key = '('. implode(',', $keys) .')';
+        } else {
+            $values = $values[0];
+            $key = $this->generateValueKey();
+            $this->addBind($key, $type, $values);
+        }
+
+        $sql = "{$field} {$operator} {$key}";
+        $this->addSqlFilter($sql);
+        return $this;
+    }
+
+    public function addOrderBy(string $column, string $order = "ASC"): self
+    {
+        $this->orderBy[] = [$column, $order];
+        return $this;
+    }
+
+    public function addSqlFilter(string $sql): self
     {
         $this->sqlFilters[] = $sql;
         return $this;
     }
 
-    protected function addSqlOrderBy(string $column, string $order): self
+    public function addSqlJoin(string $sql): self
     {
-        $this->sqlOrderBy[] = [$column, $order];
+        $this->sqlJoin[] = $sql;
         return $this;
     }
 
-    protected function addSqlParam(string $column, string $operator, array $values): self
+    public function bind(PDOStatement $statment): self
     {
-        $keys = [];
-
-        foreach ($values as $value) {
-            $key = 'param' . self::$counterKey++;
-            $this->addSqlBind($key, PDO::PARAM_INT, $value);
-            $keys[] = ":{$key}";
-        }
-
-        $keysStr = implode(',', $keys);
-
-        $this->addSqlFilter("{$column} {$operator} ({$keysStr})");
-        return $this;
-    }
-
-    protected function bind(PDOStatement $statment): self
-    {
-        if (! is_array($this->sqlBindList)) {
+        if (! is_array($this->bindList)) {
             return $this;
         }
-        foreach ($this->sqlBindList as $bind) {
-            $statment->bindValue(":{$bind['key']}", $bind['value'], $bind['type']);
+        foreach ($this->bindList as $bind) {
+            $statment->bindValue($bind['key'], $bind['value'], $bind['type']);
         }
         return $this;
     }
 
-    protected function generateSqlFilters(): string
+    public function generateSqlFilters(): string
     {
         if (empty($this->sqlFilters)) {
             return '1';
@@ -85,7 +110,7 @@ abstract class Sql
         return implode(' AND ', $this->sqlFilters);
     }
 
-    protected function generateSqlLimit(): string
+    public function generateSqlLimit(): string
     {
         $init = (int) $this->offset;
         $sql =
@@ -95,35 +120,41 @@ abstract class Sql
         return $sql;
     }
 
-    protected function generateSqlJoin(): string
+    public function generateSqlJoin(): string
     {
-        return implode(' ', $this->sqlJoin);
-    }
-
-    protected function generateSqlOrder(): string
-    {
-        if (empty($this->sqlOrderBy)) {
+        if (! is_array($this->sqlJoin)) {
             return '';
         }
 
-        $orderCommands = array_map(
-            function($item) { return implode(" ", $item); },
-            $this->sqlOrderBy
-        );
-
-        $sql = "ORDER BY " . implode(', ', $orderCommands);
-        return $sql;
+        return implode(' ', $this->sqlJoin);
     }
 
-    protected function setSqlLimit(int $limit): self
+    public function generateSqlOrder(): string
     {
-        $this->limit = $limit;
+        if (empty($this->orderBy)) {
+            return '';
+        }
+        $array = array_map(function($item) {
+            return implode(" ", $item);
+        }, $this->orderBy);
+
+        return "ORDER BY " . implode(', ', $array);
+    }
+
+    private function generateValueKey(): string
+    {
+        return ':value_'. $this->valueKey++;
+    }
+
+    public function setLimit(int $total): self
+    {
+        $this->limit = $total;
         return $this;
     }
 
-    protected function setSqlOffset(int $offset): self
+    public function setOffset(int $lineInit): self
     {
-        $this->offset = $offset;
+        $this->offset = $lineInit;
         return $this;
     }
 }

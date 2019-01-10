@@ -21,10 +21,8 @@ class AlbumTest extends TestCase
 
     public function testCreateFromManual(): void
     {
-        $photoCollection = new PhotoCollection;
         $album = new Album(
             self::TITLE,
-            $photoCollection,
             new Status(self::STATUS)
         );
         $album
@@ -36,7 +34,6 @@ class AlbumTest extends TestCase
         ->setUri(self::URI)
         ;
 
-        $this->assertInstanceOf(PhotoCollection::class, $album->getPhotos());
         $this->assertInstanceOf(Image::class, $album->getCover());
         $this->assertEquals(new DateTime(self::DATE_TIME), $album->getDateTime());
         $this->assertEquals(self::DESCRIPTION, $album->getDescription());
