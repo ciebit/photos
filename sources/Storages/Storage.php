@@ -15,13 +15,13 @@ interface Storage
 
     public function addOrderBy(string $column, string $order): self;
 
-    public function get(): ?Photo;
+    public function getTotalRecords(): int;
 
-    public function getAll(): Collection;
+    public function findAll(): Collection;
+
+    public function findOne(): ?Photo;
 
     public function setLimit(int $limit): self;
 
     public function setOffset(int $offset): self;
-
-    public function getTotalRecords(): int;
 }
