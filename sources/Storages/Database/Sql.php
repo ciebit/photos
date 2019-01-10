@@ -69,19 +69,19 @@ class Sql implements Database
 
     public function addFilterByAlbumId(string $operator, string ...$ids): Storage
     {
-        $this->addFilter(self::FIELD_ALBUM_ID, PDO::PARAM_INT, $operator, ...$ids);
+        $this->addFilter(self::FIELD_ALBUM_ID, PDO::PARAM_STR, $operator, ...$ids);
         return $this;
     }
 
     public function addFilterById(string $operator, string ...$ids): Storage
     {
-        $this->addFilter(self::FIELD_ID, PDO::PARAM_INT, $operator, ...$ids);
+        $this->addFilter(self::FIELD_ID, PDO::PARAM_STR, $operator, ...$ids);
         return $this;
     }
 
     public function addFilterByStatus(string $operator, Status ...$status): Storage
     {
-        $this->addFilter(self::FIELD_STATUS, PDO::PARAM_INT, $operator, ...$status);
+        $this->addFilter(self::FIELD_STATUS, PDO::PARAM_STR, $operator, ...$status);
         return $this;
     }
 

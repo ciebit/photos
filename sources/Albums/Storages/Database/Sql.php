@@ -83,13 +83,13 @@ class Sql implements Database
 
     public function addFilterByStatus(string $operator, Status ...$status): Storage
     {
-        $this->addFilter(self::FIELD_STATUS, PDO::PARAM_INT, $operator, ...$status);
+        $this->addFilter(self::FIELD_STATUS, PDO::PARAM_STR, $operator, ...$status);
         return $this;
     }
 
     public function addFilterByUri(string $operator, string ...$uri): Storage
     {
-        $this->addFilter(self::FIELD_URI, PDO::PARAM_INT, $operator, ...$uri);
+        $this->addFilter(self::FIELD_URI, PDO::PARAM_STR, $operator, ...$uri);
         return $this;
     }
 
