@@ -2,29 +2,41 @@
 namespace Ciebit\Photos\Albums;
 
 use Ciebit\Files\Images\Image;
-use Ciebit\Photos\Collection as PhotosCollection;
 use Ciebit\Photos\Albums\Status;
 use DateTime;
 
 class Album
 {
-    private $cover; #: Image
-    private $dateTime; #: DateTime
-    private $description; #: string
-    private $id; #: string
-    private $language; #: string
-    private $photos; #: PhotosCollection
-    private $status; #: Status
-    private $title; #: string
-    private $uri; #: string
+    /** @var Image */
+    private $cover;
 
-    public function __construct(string $title, PhotosCollection $photos, Status $status)
+    /** @var DateTime */
+    private $dateTime;
+
+    /** @var string */
+    private $description;
+
+    /** @var string */
+    private $id;
+
+    /** @var string */
+    private $language;
+
+    /** @var Status */
+    private $status;
+
+    /** @var string */
+    private $title;
+
+    /** @var string */
+    private $uri;
+
+    public function __construct(string $title, Status $status)
     {
         $this->dateTime = new DateTime;
         $this->description = '';
         $this->id = '';
         $this->language = 'pt-BR';
-        $this->photos = $photos;
         $this->status = $status;
         $this->title = $title;
         $this->uri = '';
@@ -56,11 +68,6 @@ class Album
     public function getLanguage(): string
     {
         return $this->language;
-    }
-
-    public function getPhotos(): PhotosCollection
-    {
-        return $this->photos;
     }
 
     public function getStatus(): Status
