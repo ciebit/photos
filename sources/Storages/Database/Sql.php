@@ -216,7 +216,7 @@ class Sql implements Database
 
     public function getTotalRecords(): int
     {
-        return (int) $this->pdo->query('SELECT FOUND_ROWS()')->fetchColumn();
+        return $this->totalItemsLastQuery;
     }
 
     public function setOffset(int $limit): Storage
