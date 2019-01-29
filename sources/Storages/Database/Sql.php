@@ -197,6 +197,8 @@ class Sql implements Database
             return null;
         }
 
+        $this->totalItemsLastQuery = (int) $this->pdo->query('SELECT FOUND_ROWS()')->fetchColumn();
+
         $fileStorage = clone $this->fileStorage;
 
         $photoData['image'] = $fileStorage->addFilterById($photoData[self::FIELD_FILE_ID])->get();
