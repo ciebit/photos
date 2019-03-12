@@ -60,6 +60,11 @@ class Sql implements Database
         $this->totalItemsLastQuery = 0;
     }
 
+    public function __clone()
+    {
+        $this->sqlHelper = clone $this->sqlHelper;
+    }
+
     private function addFilter(string $fieldName, int $type, string $operator, ...$value): self
     {
         $field = "`{$this->table}`.`{$fieldName}`";
@@ -158,7 +163,7 @@ class Sql implements Database
         $fileStorage = clone $this->fileStorage;
         $imagesId = array_column($photosData, 'file_id');
         $imagesId = array_map('intval', $imagesId);
-        $images = $fileStorage->addFilterByIds('=', ...$imagesId)->getAll();
+        $images = $fileStorage->addFilterById('=', ...$imagesId)->findAll();
 
         foreach ($photosData as $photoData) {
             $photoData['image'] = $images->getById($photoData[self::FIELD_FILE_ID]);
@@ -201,7 +206,7 @@ class Sql implements Database
 
         $fileStorage = clone $this->fileStorage;
 
-        $photoData['image'] = $fileStorage->addFilterById($photoData[self::FIELD_FILE_ID])->get();
+        $photoData['image'] = $fileStorage->addFilterById('=', $photoData[self::FIELD_FILE_ID])->findOne();
 
         if (! $photoData['image'] instanceof Image) {
             throw new Exception('ciebit.photos.storages.database.sql.image_not_found', 3);

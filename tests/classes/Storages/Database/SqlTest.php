@@ -2,6 +2,7 @@
 namespace Ciebit\PhotosTests\Storages\Database;
 
 use Ciebit\Files\Storages\Database\Sql as FileSql;
+use Ciebit\Labels\Storages\Database\Sql as LabelSql;
 use Ciebit\Photos\Collection;
 use Ciebit\Photos\Photo;
 use Ciebit\Photos\Status;
@@ -13,7 +14,8 @@ class SqlTest extends Connection
     public function getDatabase(): Sql
     {
         $pdo = $this->getPdo();
-        $fileStorage = new FileSql($pdo);
+        $labelStorage = new LabelSql($pdo);
+        $fileStorage = new FileSql($pdo, $labelStorage);
         return new Sql($pdo, $fileStorage);
     }
 

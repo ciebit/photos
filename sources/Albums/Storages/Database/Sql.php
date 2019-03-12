@@ -68,6 +68,11 @@ class Sql implements Database
         $this->totalItemsLastQuery = 0;
     }
 
+    public function __clone()
+    {
+        $this->sqlHelper = clone $this->sqlHelper;
+    }
+
     private function addFilter(string $fieldName, int $type, string $operator, ...$value): self
     {
         $field = "`{$this->table}`.`{$fieldName}`";
@@ -149,10 +154,12 @@ class Sql implements Database
 
         $coversId = array_column($albumsData, self::FIELD_COVER_ID);
         $coversId = array_filter($coversId);
-        $images = (clone $this->fileStorage)->addFilterByIds('=', ...$coversId)->getAll();
+        if (! empty($coversId)) {
+            $images = (clone $this->fileStorage)->addFilterById('=', ...$coversId)->findAll();
+        }
 
         foreach ($albumsData as $albumData) {
-            if ($albumData['cover_id'] > 0) {
+            if (isset($images) && $albumData['cover_id'] > 0) {
                 $albumData['cover'] = $images->getById($albumData['cover_id']);
             }
             $collection->add(
@@ -187,7 +194,7 @@ class Sql implements Database
 
         if ($albumData['cover_id'] > 0) {
             $fileStorage = clone $this->fileStorage;
-            $albumData['cover'] = $fileStorage->addFilterById($albumData['cover_id'])->get();
+            $albumData['cover'] = $fileStorage->addFilterById('=', $albumData['cover_id'])->findOne();
         }
 
         return $this->create($albumData);
