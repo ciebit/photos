@@ -28,8 +28,9 @@
     },
     "require": {
         "php": "^7.1",
-        "ciebit/files": "^1.1",
-        "myclabs/php-enum": "^1.6.1"
+        "ciebit/files": "^2.0",
+        "myclabs/php-enum": "^1.6.1",
+        "ciebit/labels": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5",
